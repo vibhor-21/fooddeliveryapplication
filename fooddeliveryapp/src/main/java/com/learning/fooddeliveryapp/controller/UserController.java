@@ -83,7 +83,7 @@ public class UserController {
 		String result = userService.authenticateUser(register);
 		
 		if(result.equals("success")) {
-			return new ResponseEntity<>(register, HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
