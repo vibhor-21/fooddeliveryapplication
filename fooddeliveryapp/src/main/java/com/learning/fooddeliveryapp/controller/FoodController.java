@@ -69,6 +69,7 @@ public class FoodController {
 		return new ResponseEntity<>(foodService.updateFood(id, food),HttpStatus.OK);
 	}
 	
+	
 	@DeleteMapping("/food/{foodId}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> deleteFood(@PathVariable("foodId") Long id){
