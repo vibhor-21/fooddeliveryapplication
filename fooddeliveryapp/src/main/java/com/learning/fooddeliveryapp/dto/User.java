@@ -1,52 +1,80 @@
 package com.learning.fooddeliveryapp.dto;
 
-import javax.persistence.CascadeType;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+@EqualsAndHashCode
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "email")}, name = "register")
-public class Register {
-
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int regId;
+@Table(name="register")
+public class User 
+{
 	
-	@Size(max=50)
-	@Email
+	@Email // giving the email constraint 
+	@NotNull
 	private String email;
 	
-	@Size(max=50)
-	@NotBlank
-	private String name;
+	@NotNull
+	@Size(max=40)
+	private String username;
 	
-	@Size(max=100)
-	@NotBlank
+	@Size(min=8)
+	@NotNull
 	private String password;
 	
-	@NotBlank
+	@Size(max=100)
+	@NotNull
 	private String address;
 	
-	@OneToOne(mappedBy = "regId", cascade = CascadeType.ALL)
-	@JsonIgnore
-	private Login login;
+	@Id  // making regId as primary key
+	@GeneratedValue(strategy = GenerationType.AUTO) 
+	private Long Id;
 	
+	
+	
+//	  @JsonSerialize(using=CustomListSerializer.class)
+//	  @OneToOne(mappedBy = "register", cascade = CascadeType.ALL)
+//	  private Login login;
+	
+	@ManyToMany(fetch =FetchType.LAZY)
+	@JoinTable(name="User_roles",joinColumns = @JoinColumn(name="regId"),
+	inverseJoinColumns=@JoinColumn(name="roleId"))
+	
+	private Set<Role> roles = new HashSet<>();
+	  
+	  public User(String username,String email,String password,String address) {
+			
+			this.username = username;
+			this.email = email;
+			this.password = password;
+			this.address=address;
+		}
+		
+
 }
+
+
+

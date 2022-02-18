@@ -10,7 +10,11 @@ import com.learning.fooddeliveryapp.dto.Food;
 import com.learning.fooddeliveryapp.dto.FoodType;
 
 @Repository
-public interface FoodRepository extends JpaRepository<Food, Integer> {
+public interface FoodRepository extends JpaRepository<Food, Long> 
+{
+
+	boolean existsByFoodName(String foodName);
+
+	Optional<List<Food>> findByFoodType(FoodType type);
 	
-//	Optional<List<Food>> findByFoodType(FoodType foodtype);
 }

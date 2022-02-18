@@ -35,7 +35,7 @@ public class FoodServiceImpl implements FoodService {
 	}
 
 	@Override
-	public Food getFoodById(int id) {
+	public Food getFoodById(Long id) {
 		// TODO Auto-generated method stub
 		Optional<Food> optional = foodRepository.findById(id);
 		if(optional.isEmpty())
@@ -45,7 +45,7 @@ public class FoodServiceImpl implements FoodService {
 	}
 
 	@Override
-	public String updateFood(int id, Food food) {
+	public String updateFood(Long id, Food food) {
 		// TODO Auto-generated method stub
 		if(this.foodRepository.existsById(id)==false)
 			return "fail";
@@ -53,7 +53,7 @@ public class FoodServiceImpl implements FoodService {
 	}
 
 	@Override
-	public String deleteFoodById(int id) {
+	public String deleteFoodById(Long id) {
 		// TODO Auto-generated method stub
 		Food optional = this.getFoodById(id);
 		if(optional==null) {
@@ -65,12 +65,13 @@ public class FoodServiceImpl implements FoodService {
 		}
 		
 	}
+	
+	@Override
+	public Optional<List<Food>> getAllfoodbytypes(FoodType type) {
+		// TODO Auto-generated method stub
+		return foodRepository.findByFoodType(type);
+	}
 
-//	@Override
-//	public Optional<List<Food>> getFoodType(FoodType foodtype) {
-//		// TODO Auto-generated method stub
-//		return foodRepository.findByFoodType(foodtype);
-//		
-//	}
+
 
 }

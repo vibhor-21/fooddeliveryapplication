@@ -29,9 +29,9 @@ public class Login {
 	@NotBlank
 	private String password;
 	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "regId")
-	@JsonProperty(access = Access.WRITE_ONLY)
-	private Register regId;
+//	@OneToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "regId")
+//	@JsonProperty(access = Access.WRITE_ONLY)
+//	private User regId;
 	
 }

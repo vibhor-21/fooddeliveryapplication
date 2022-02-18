@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,27 +26,30 @@ import com.learning.fooddeliveryapp.service.FoodService;
 
 @RestController
 
-@RequestMapping("/request")
+@RequestMapping("/api/request")
 public class FoodController {
 
 	@Autowired
 	FoodService foodService;
 	
 	@PostMapping("/food")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> addFood(@Valid @RequestBody Food food){
 		
 		Food result = foodService.addFood(food);
 		return ResponseEntity.status(201).body(result);
 	}
 	
-	@GetMapping("/{foodId}")
-	public ResponseEntity<?> getFoodById(@PathVariable("foodId") int id){
+	@GetMapping("/food/{foodId}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<?> getFoodById(@PathVariable("foodId") Long id){
 		
 		Food result = foodService.getFoodById(id);
 		return ResponseEntity.status(201).body(result);
 	}
 	
 	@GetMapping("/food")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> getAllFood(){
 		Optional<List<Food>> optional = foodService.getAllFood();
 		
@@ -57,14 +61,16 @@ public class FoodController {
 		return ResponseEntity.ok(optional.get());
 	}
 	
-	@PutMapping("/{foodId}")
-	public ResponseEntity<?> updateFood(@PathVariable("/foodId") int id, @RequestBody Food food){
+	@PutMapping("/food/{foodId}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<?> updateFood(@PathVariable("/foodId") Long id, @RequestBody Food food){
 		
 		return new ResponseEntity<>(foodService.updateFood(id, food),HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/{foodId}")
-	public ResponseEntity<?> deleteFood(@PathVariable("foodId") int id){
+	@DeleteMapping("/food/{foodId}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<?> deleteFood(@PathVariable("foodId") Long id){
 		
 		String result = foodService.deleteFoodById(id);
 		
@@ -74,6 +80,19 @@ public class FoodController {
 		else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@GetMapping("/foodbytype")
+	public ResponseEntity<?> getfooddetailsbyType(@RequestBody Food food){
+		Optional<List<Food>> optional = foodService.getAllfoodbytypes(food.getFoodType());
+		
+		if(optional.isEmpty()) {
+			Map<String,String> map = new HashMap<String, String>();
+			map.put("message","no record found");
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(map);
+		}
+		
+		return ResponseEntity.of(optional);
 	}
 	
 
